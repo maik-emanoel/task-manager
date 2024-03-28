@@ -6,7 +6,7 @@ export default async function Tasks() {
   const user = await getUser();
   const tasks = await prisma.task.findMany({
     where: { userId: user?.id },
-    orderBy: { createdAt: "asc" },
+    orderBy: { createdAt: "desc" },
   });
 
   return <TasksTable tasks={tasks} />;
