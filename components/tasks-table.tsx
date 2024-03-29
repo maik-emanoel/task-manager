@@ -21,10 +21,52 @@ import {
   TableBody,
   TableCell,
 } from "./ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+} from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
 import { TaskSchema } from "@/app/types";
+import { updateDatabase } from "@/app/actions";
+import { toast } from "sonner";
 
 export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
+  async function handleChangeTaskLabel({
+    value,
+    id,
+  }: {
+    value: string;
+    id: string;
+  }) {
+    const changeTaskLabel = await fetch("/api/task", {
+      method: "PATCH",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify({
+        value,
+        id,
+      }),
+    });
+
+    const response = await changeTaskLabel.json();
+    updateDatabase()
+
+    if (response.ok) {
+      toast.success(response.message)
+    } else {
+      toast.error(response.message)
+    }
+  }
 
   if (tasks.length === 0) {
     return (
@@ -78,10 +120,45 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
                 </div>
               </TableCell>
               <TableCell>
-                <Button variant="ghost" className="size-8 p-0 flex">
-                  <DotsThree className="mx-auto size-5 cursor-pointer" />
-                  <span className="sr-only">Open menu</span>
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="size-8 p-0 flex">
+                      <DotsThree className="mx-auto size-5 cursor-pointer" />
+                      <span className="sr-only">Open menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuItem>Copy task id</DropdownMenuItem>
+                    <DropdownMenuItem>Favorite</DropdownMenuItem>
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
+                      <DropdownMenuSubContent>
+                        <DropdownMenuRadioGroup
+                          value={task.label}
+                          onValueChange={(e) =>
+                            handleChangeTaskLabel({ value: e, id: task.id })
+                          }
+                        >
+                          <DropdownMenuRadioItem value="bug">
+                            Bug
+                          </DropdownMenuRadioItem>
+                          <DropdownMenuRadioItem value="feature">
+                            Feature
+                          </DropdownMenuRadioItem>
+                          <DropdownMenuRadioItem value="documentation">
+                            Documentation
+                          </DropdownMenuRadioItem>
+                        </DropdownMenuRadioGroup>
+                      </DropdownMenuSubContent>
+                    </DropdownMenuSub>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      Delete
+                      <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </TableCell>
             </TableRow>
           );
@@ -134,5 +211,5 @@ function PriorityIcon({ priority }: { priority: string }) {
       break;
   }
 
-  return <Icon className="mr-2 size-4 text-muted-foreground" />
+  return <Icon className="mr-2 size-4 text-muted-foreground" />;
 }
