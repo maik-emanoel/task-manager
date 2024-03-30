@@ -20,13 +20,36 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       message: "Task created successfully",
       status: 201,
-      ok: true
+      ok: true,
     });
   } catch (error) {
     return NextResponse.json({
       message: "Internal server error",
       status: 500,
-      ok: false
+      ok: false,
+    });
+  }
+}
+
+export async function PATCH(req: NextRequest) {
+  try {
+    const { id: taskId, value: taskNewLabel } = await req.json();
+
+    await prisma.task.update({
+      where: { id: taskId },
+      data: {
+        label: taskNewLabel,
+      },
+    });
+
+    return NextResponse.json({
+      message: "Label updated successfully!",
+      ok: true,
+    });
+  } catch (error) {
+    return NextResponse.json({
+      message: "Failed update label, try again!",
+      ok: false,
     });
   }
 }
