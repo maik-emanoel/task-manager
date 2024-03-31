@@ -53,3 +53,23 @@ export async function PATCH(req: NextRequest) {
     });
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const taskId: string = await req.json();
+
+    await prisma.task.delete({
+      where: { id: taskId },
+    });
+
+    return NextResponse.json({
+      message: "Task deleted successfully!",
+      ok: true,
+    });
+  } catch (error) {
+    return NextResponse.json({
+      message: "Failed to delete task, please try again!",
+      ok: false,
+    });
+  }
+}
