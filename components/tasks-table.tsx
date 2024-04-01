@@ -27,7 +27,6 @@ import {
   DropdownMenuContent,
   DropdownMenuSeparator,
   DropdownMenuItem,
-  DropdownMenuShortcut,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -37,6 +36,7 @@ import {
 import { Button } from "./ui/button";
 import { TaskSchema } from "@/app/types";
 import { updateDatabase } from "@/app/actions";
+import DeleteTaskButton from "./delete-task-button";
 import { toast } from "sonner";
 
 export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
@@ -59,12 +59,12 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
     });
 
     const response = await changeTaskLabel.json();
-    updateDatabase()
+    updateDatabase();
 
     if (response.ok) {
-      toast.success(response.message)
+      toast.success(response.message);
     } else {
-      toast.error(response.message)
+      toast.error(response.message);
     }
   }
 
@@ -120,7 +120,7 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
                 </div>
               </TableCell>
               <TableCell>
-                <DropdownMenu>
+                <DropdownMenu modal={false}>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="size-8 p-0 flex">
                       <DotsThree className="mx-auto size-5 cursor-pointer" />
@@ -153,10 +153,7 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
                       </DropdownMenuSubContent>
                     </DropdownMenuSub>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem>
-                      Delete
-                      <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-                    </DropdownMenuItem>
+                    <DeleteTaskButton taskId={task.id} />
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>
