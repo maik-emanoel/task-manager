@@ -68,6 +68,16 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
     }
   }
 
+  async function handleCopyTaskId({ taskId }: { taskId: string }) {
+    toast.success('TaskId copied to your clipboard!')
+
+    if ("clipboard" in navigator) {
+      return await navigator.clipboard.writeText(taskId);
+    } else {
+      return document.execCommand("copy", true, taskId);
+    }
+  }
+
   if (tasks.length === 0) {
     return (
       <p className="text-muted-foreground text-sm text-center pt-40">
@@ -129,7 +139,11 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48">
                     <DropdownMenuItem>Edit</DropdownMenuItem>
-                    <DropdownMenuItem>Copy task id</DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => handleCopyTaskId({ taskId: task.id })}
+                    >
+                      Copy task id
+                    </DropdownMenuItem>
                     <DropdownMenuItem>Favorite</DropdownMenuItem>
                     <DropdownMenuSub>
                       <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
