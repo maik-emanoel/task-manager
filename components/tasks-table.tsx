@@ -36,18 +36,24 @@ import {
 import { Button } from "./ui/button";
 import { TaskSchema } from "@/app/types";
 import { updateDatabase } from "@/app/actions";
-import DeleteTaskButton from "./delete-task-button";
 import { toast } from "sonner";
+import DeleteTaskButton from "./delete-task-button";
 
 export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
-  async function handleChangeTaskLabel({
+  async function handleChangeTaskInfo({
     value,
     id,
+    isStatus,
+    actualValue
   }: {
     value: string;
     id: string;
+    isStatus: boolean;
+    actualValue: string
   }) {
-    const changeTaskLabel = await fetch("/api/task", {
+    if (value === actualValue) return
+
+    const changeTaskInfo = await fetch("/api/task", {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",
@@ -55,10 +61,11 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
       body: JSON.stringify({
         value,
         id,
+        isStatus,
       }),
     });
 
-    const response = await changeTaskLabel.json();
+    const response = await changeTaskInfo.json();
     updateDatabase();
 
     if (response.ok) {
@@ -69,7 +76,7 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
   }
 
   async function handleCopyTaskId({ taskId }: { taskId: string }) {
-    toast.success('TaskId copied to your clipboard!')
+    toast.success("TaskId copied to your clipboard!");
 
     if ("clipboard" in navigator) {
       return await navigator.clipboard.writeText(taskId);
@@ -129,6 +136,7 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
                   </span>
                 </div>
               </TableCell>
+
               <TableCell>
                 <DropdownMenu modal={false}>
                   <DropdownMenuTrigger asChild>
@@ -138,20 +146,58 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuItem>Edit</DropdownMenuItem>
+                    <DropdownMenuItem disabled>Edit</DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => handleCopyTaskId({ taskId: task.id })}
                     >
                       Copy task id
                     </DropdownMenuItem>
-                    <DropdownMenuItem>Favorite</DropdownMenuItem>
+                    <DropdownMenuSub>
+                      <DropdownMenuSubTrigger>Status</DropdownMenuSubTrigger>
+
+                      <DropdownMenuSubContent>
+                        <DropdownMenuRadioGroup
+                          value={task.status}
+                          onValueChange={(e) =>
+                            handleChangeTaskInfo({
+                              value: e,
+                              actualValue: task.status,
+                              id: task.id,
+                              isStatus: true,
+                            })
+                          }
+                        >
+                          <DropdownMenuRadioItem value="todo">
+                            Todo
+                          </DropdownMenuRadioItem>
+                          <DropdownMenuRadioItem value="inProgress">
+                            In Progress
+                          </DropdownMenuRadioItem>
+                          <DropdownMenuRadioItem value="done">
+                            Done
+                          </DropdownMenuRadioItem>
+                          <DropdownMenuRadioItem value="canceled">
+                            Canceled
+                          </DropdownMenuRadioItem>
+                          <DropdownMenuRadioItem value="backlog">
+                            Backlog
+                          </DropdownMenuRadioItem>
+                        </DropdownMenuRadioGroup>
+                      </DropdownMenuSubContent>
+                    </DropdownMenuSub>
+
                     <DropdownMenuSub>
                       <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
                       <DropdownMenuSubContent>
                         <DropdownMenuRadioGroup
                           value={task.label}
                           onValueChange={(e) =>
-                            handleChangeTaskLabel({ value: e, id: task.id })
+                            handleChangeTaskInfo({
+                              value: e,
+                              actualValue: task.label,
+                              id: task.id,
+                              isStatus: false,
+                            })
                           }
                         >
                           <DropdownMenuRadioItem value="bug">

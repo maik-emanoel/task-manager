@@ -33,22 +33,31 @@ export async function POST(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   try {
-    const { id: taskId, value: taskNewLabel } = await req.json();
+    const { id: taskId, value, isStatus } = await req.json();
 
-    await prisma.task.update({
-      where: { id: taskId },
-      data: {
-        label: taskNewLabel,
-      },
-    });
+    if (isStatus) {
+      await prisma.task.update({
+        where: { id: taskId },
+        data: {
+          status: value,
+        },
+      });
+    } else {
+      await prisma.task.update({
+        where: { id: taskId },
+        data: {
+          label: value,
+        },
+      });
+    }
 
     return NextResponse.json({
-      message: "Label updated successfully!",
+      message: `${isStatus ? 'Status' : 'Label'} updated successfully!`,
       ok: true,
     });
   } catch (error) {
     return NextResponse.json({
-      message: "Failed update label, try again!",
+      message: `Failed update task, try again!`,
       ok: false,
     });
   }
