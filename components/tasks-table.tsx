@@ -44,14 +44,14 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
     value,
     id,
     isStatus,
-    actualValue
+    actualValue,
   }: {
     value: string;
     id: string;
     isStatus: boolean;
-    actualValue: string
+    actualValue: string;
   }) {
-    if (value === actualValue) return
+    if (value === actualValue) return;
 
     const changeTaskInfo = await fetch("/api/task", {
       method: "PATCH",
@@ -68,11 +68,15 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
     const response = await changeTaskInfo.json();
     updateDatabase();
 
-    if (response.ok) {
-      toast.success(response.message);
-    } else {
-      toast.error(response.message);
-    }
+    const promise = new Promise((resolve) => {
+      resolve(response);
+    });
+
+    toast.promise(promise, {
+      loading: "Loading...",
+      success: response.message,
+      error: response.message,
+    });
   }
 
   async function handleCopyTaskId({ taskId }: { taskId: string }) {
