@@ -1,6 +1,7 @@
 import CreateTaskButton from "@/components/create-task-button";
 import FilterTools from "@/components/filter-tools";
 import Header from "@/components/header";
+import Pagination from "@/components/pagination";
 import Tasks from "@/components/tasks";
 
 export default async function Home() {
@@ -14,7 +15,7 @@ export default async function Home() {
         </div>
 
         <Tasks />
-        {/* Pagination */}
+        <Pagination />
       </div>
     </div>
   );
