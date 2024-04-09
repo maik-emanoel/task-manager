@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { Check, PlusCircle } from "@phosphor-icons/react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandSeparator,
 } from "@/components/ui/command";
 import {
   Popover,
@@ -18,26 +18,42 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-const frameworks = [
+import {
+  Circle,
+  Timer,
+  XCircle,
+  CheckCircle,
+  Question,
+  Check,
+  PlusCircle,
+  FunnelSimple,
+} from "@phosphor-icons/react";
+
+const status = [
   {
-    value: "next.js",
-    label: "Next.js",
+    value: "todo",
+    label: "Todo",
+    icon: Circle,
   },
   {
-    value: "sveltekit",
-    label: "SvelteKit",
+    value: "inProgress",
+    label: "In Progress",
+    icon: Timer,
   },
   {
-    value: "nuxt.js",
-    label: "Nuxt.js",
+    value: "done",
+    label: "Done",
+    icon: XCircle,
   },
   {
-    value: "remix",
-    label: "Remix",
+    value: "canceled",
+    label: "Canceled",
+    icon: CheckCircle,
   },
   {
-    value: "astro",
-    label: "Astro",
+    value: "backlog",
+    label: "Backlog",
+    icon: Question,
   },
 ];
 
@@ -54,23 +70,27 @@ export default function StatusCombobox() {
           aria-expanded={open}
           className="w-fit justify-between items-center px-3 border-dashed"
         >
-          <PlusCircle className="mr-2 size-4 shrink-0" />
+          {status.find((status) => status.value === value) ? (
+            <FunnelSimple className="mr-2 size-4 shrink-0" />
+          ) : (
+            <PlusCircle className="mr-2 size-4 shrink-0" />
+          )}
           {value
-            ? frameworks.find((framework) => framework.value === value)?.label
+            ? status.find((status) => status.value === value)?.label
             : "Status"}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0" align="start">
         <Command>
-          <CommandInput placeholder="Search framework..." />
-          <CommandEmpty>No framework found.</CommandEmpty>
+          <CommandInput placeholder="Search status..." />
+          <CommandEmpty>No status found.</CommandEmpty>
           <CommandGroup>
-            {frameworks.map((framework) => (
+            {status.map((status) => (
               <CommandItem
-                key={framework.value}
-                value={framework.value}
-                onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue);
+                key={status.value}
+                value={status.value}
+                onSelect={() => {
+                  setValue(status.value);
                   setOpen(false);
                 }}
                 className="data-[disabled]:pointer-events-auto"
@@ -78,13 +98,23 @@ export default function StatusCombobox() {
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    value === framework.value ? "opacity-100" : "opacity-0"
+                    value === status.value ? "opacity-100" : "opacity-0"
                   )}
                 />
-                {framework.label}
+                {status.label}
               </CommandItem>
             ))}
           </CommandGroup>
+          {value && (
+            <>
+              <CommandSeparator />
+              <CommandGroup>
+                <CommandItem className="justify-center">
+                  Clear filter
+                </CommandItem>
+              </CommandGroup>
+            </>
+          )}
         </Command>
       </PopoverContent>
     </Popover>
