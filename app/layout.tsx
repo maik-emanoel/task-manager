@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { PaginationProvider } from "./contexts/usePagination";
+import { SearchFilterProvider } from "./contexts/useSearchFilter";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,8 +19,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className} antialiased bg-background min-h-screen`}>
-        {children}
+      <body
+        className={`${inter.className} antialiased bg-background min-h-screen`}
+      >
+        <PaginationProvider>
+          <SearchFilterProvider>{children}</SearchFilterProvider>
+        </PaginationProvider>
         <Toaster richColors />
       </body>
     </html>
