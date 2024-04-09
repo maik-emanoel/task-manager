@@ -38,8 +38,18 @@ import { TaskSchema } from "@/app/types";
 import { updateDatabase } from "@/app/actions";
 import { toast } from "sonner";
 import DeleteTaskButton from "./delete-task-button";
+import { usePagination } from "@/app/contexts/usePagination";
+import { useSearchFilter } from "@/app/contexts/useSearchFilter";
+import { useEffect } from "react";
 
 export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
+  const { page, rowsPerPage, setTotalPages } = usePagination();
+  const { debouncedSearch: search } = useSearchFilter();
+
+  useEffect(() => {
+    setTotalPages(Math.ceil(tasks.length / rowsPerPage));
+  }, [setTotalPages, tasks.length, rowsPerPage]);
+
   async function handleChangeTaskInfo({
     value,
     id,
@@ -97,6 +107,13 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
     );
   }
 
+  const filteredTasks =
+    search.length > 0
+      ? tasks.filter((task) =>
+          task.title.toLowerCase().includes(search.toLowerCase())
+        )
+      : tasks;
+
   return (
     <Table>
       <TableHeader className="pointer-events-none">
@@ -108,122 +125,124 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {tasks.map((task) => {
-          return (
-            <TableRow key={task.id}>
-              <TableCell className="font-medium pl-5">
-                <div className="w-[80px]" title={task.id}>
-                  {task.id.slice(0, 4)}...
-                </div>
-              </TableCell>
-              <TableCell>
-                <div className="flex space-x-2">
-                  <span className="inline items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground first-letter:uppercase">
-                    {task.label}
-                  </span>
-                  <span className="max-w-[450px] truncate font-medium">
-                    {task.title}
-                  </span>
-                </div>
-              </TableCell>
-              <TableCell>
-                <div className="flex w-[110px] items-center">
-                  <StatusIcon status={task.status} />
-                  <span className="capitalize">{task.status}</span>
-                </div>
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center w-[110px]">
-                  <PriorityIcon priority={task.priority} />
-                  <span className="first-letter:uppercase">
-                    {task.priority}
-                  </span>
-                </div>
-              </TableCell>
+        {filteredTasks
+          .slice((page - 1) * rowsPerPage, page * rowsPerPage)
+          .map((task) => {
+            return (
+              <TableRow key={task.id}>
+                <TableCell className="font-medium pl-5">
+                  <div className="w-[80px]" title={task.id}>
+                    {task.id.slice(0, 4)}...
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex space-x-2">
+                    <span className="inline items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-foreground first-letter:uppercase">
+                      {task.label}
+                    </span>
+                    <span className="max-w-[450px] truncate font-medium">
+                      {task.title}
+                    </span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex w-[110px] items-center">
+                    <StatusIcon status={task.status} />
+                    <span className="capitalize">{task.status}</span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center w-[110px]">
+                    <PriorityIcon priority={task.priority} />
+                    <span className="first-letter:uppercase">
+                      {task.priority}
+                    </span>
+                  </div>
+                </TableCell>
 
-              <TableCell>
-                <DropdownMenu modal={false}>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="size-8 p-0 flex">
-                      <DotsThree className="mx-auto size-5 cursor-pointer" />
-                      <span className="sr-only">Open menu</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48">
-                    <DropdownMenuItem disabled>Edit</DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => handleCopyTaskId({ taskId: task.id })}
-                    >
-                      Copy task id
-                    </DropdownMenuItem>
-                    <DropdownMenuSub>
-                      <DropdownMenuSubTrigger>Status</DropdownMenuSubTrigger>
+                <TableCell>
+                  <DropdownMenu modal={false}>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="size-8 p-0 flex">
+                        <DotsThree className="mx-auto size-5 cursor-pointer" />
+                        <span className="sr-only">Open menu</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuItem disabled>Edit</DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleCopyTaskId({ taskId: task.id })}
+                      >
+                        Copy task id
+                      </DropdownMenuItem>
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>Status</DropdownMenuSubTrigger>
 
-                      <DropdownMenuSubContent>
-                        <DropdownMenuRadioGroup
-                          value={task.status}
-                          onValueChange={(e) =>
-                            handleChangeTaskInfo({
-                              value: e,
-                              actualValue: task.status,
-                              id: task.id,
-                              isStatus: true,
-                            })
-                          }
-                        >
-                          <DropdownMenuRadioItem value="todo">
-                            Todo
-                          </DropdownMenuRadioItem>
-                          <DropdownMenuRadioItem value="inProgress">
-                            In Progress
-                          </DropdownMenuRadioItem>
-                          <DropdownMenuRadioItem value="done">
-                            Done
-                          </DropdownMenuRadioItem>
-                          <DropdownMenuRadioItem value="canceled">
-                            Canceled
-                          </DropdownMenuRadioItem>
-                          <DropdownMenuRadioItem value="backlog">
-                            Backlog
-                          </DropdownMenuRadioItem>
-                        </DropdownMenuRadioGroup>
-                      </DropdownMenuSubContent>
-                    </DropdownMenuSub>
+                        <DropdownMenuSubContent>
+                          <DropdownMenuRadioGroup
+                            value={task.status}
+                            onValueChange={(e) =>
+                              handleChangeTaskInfo({
+                                value: e,
+                                actualValue: task.status,
+                                id: task.id,
+                                isStatus: true,
+                              })
+                            }
+                          >
+                            <DropdownMenuRadioItem value="todo">
+                              Todo
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="inProgress">
+                              In Progress
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="done">
+                              Done
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="canceled">
+                              Canceled
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="backlog">
+                              Backlog
+                            </DropdownMenuRadioItem>
+                          </DropdownMenuRadioGroup>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
 
-                    <DropdownMenuSub>
-                      <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
-                      <DropdownMenuSubContent>
-                        <DropdownMenuRadioGroup
-                          value={task.label}
-                          onValueChange={(e) =>
-                            handleChangeTaskInfo({
-                              value: e,
-                              actualValue: task.label,
-                              id: task.id,
-                              isStatus: false,
-                            })
-                          }
-                        >
-                          <DropdownMenuRadioItem value="bug">
-                            Bug
-                          </DropdownMenuRadioItem>
-                          <DropdownMenuRadioItem value="feature">
-                            Feature
-                          </DropdownMenuRadioItem>
-                          <DropdownMenuRadioItem value="documentation">
-                            Documentation
-                          </DropdownMenuRadioItem>
-                        </DropdownMenuRadioGroup>
-                      </DropdownMenuSubContent>
-                    </DropdownMenuSub>
-                    <DropdownMenuSeparator />
-                    <DeleteTaskButton taskId={task.id} />
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            </TableRow>
-          );
-        })}
+                      <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                          <DropdownMenuRadioGroup
+                            value={task.label}
+                            onValueChange={(e) =>
+                              handleChangeTaskInfo({
+                                value: e,
+                                actualValue: task.label,
+                                id: task.id,
+                                isStatus: false,
+                              })
+                            }
+                          >
+                            <DropdownMenuRadioItem value="bug">
+                              Bug
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="feature">
+                              Feature
+                            </DropdownMenuRadioItem>
+                            <DropdownMenuRadioItem value="documentation">
+                              Documentation
+                            </DropdownMenuRadioItem>
+                          </DropdownMenuRadioGroup>
+                        </DropdownMenuSubContent>
+                      </DropdownMenuSub>
+                      <DropdownMenuSeparator />
+                      <DeleteTaskButton taskId={task.id} />
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            );
+          })}
       </TableBody>
     </Table>
   );
