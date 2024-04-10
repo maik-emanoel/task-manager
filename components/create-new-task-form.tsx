@@ -17,7 +17,6 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import ErrorMessage from "./ui/error-message";
 import { toast } from "sonner";
-import { revalidatePath } from "next/cache";
 import { updateDatabase } from "@/app/actions";
 
 interface CreateNewTaskFormProps {

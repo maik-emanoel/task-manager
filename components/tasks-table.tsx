@@ -63,7 +63,7 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
   }) {
     if (value === actualValue) return;
 
-    const changeTaskInfo = await fetch("/api/task", {
+    const changeTaskInfo = fetch("/api/task", {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",
@@ -75,17 +75,13 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
       }),
     });
 
-    const response = await changeTaskInfo.json();
+    const response = changeTaskInfo
     updateDatabase();
 
-    const promise = new Promise((resolve) => {
-      resolve(response);
-    });
-
-    toast.promise(promise, {
+    toast.promise(response, {
       loading: "Loading...",
-      success: response.message,
-      error: response.message,
+      success: `${isStatus ? 'Status' : 'Label'} updated successfully!`,
+      error: 'Failed update task, try again!',
     });
   }
 
@@ -109,9 +105,13 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
 
   const filteredTasks =
     search.length > 0
-      ? tasks.filter((task) =>
-          task.title.toLowerCase().includes(search.toLowerCase())
-        )
+      ? tasks.filter((task) => {
+        const filterTask = task.title.toLowerCase().includes(search.toLowerCase());
+  
+          if (filterTask && task.status === 'todo' && task.priority === 'low') {
+            return true
+          }
+        })
       : tasks;
 
   return (
