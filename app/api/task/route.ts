@@ -51,15 +51,9 @@ export async function PATCH(req: NextRequest) {
       });
     }
 
-    return NextResponse.json({
-      message: `${isStatus ? 'Status' : 'Label'} updated successfully!`,
-      ok: true,
-    });
+    return NextResponse.json({ ok: true });
   } catch (error) {
-    return NextResponse.json({
-      message: `Failed update task, try again!`,
-      ok: false,
-    });
+    return NextResponse.json({ ok: false });
   }
 }
 
