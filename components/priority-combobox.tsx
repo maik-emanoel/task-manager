@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, PlusCircle } from "@phosphor-icons/react";
+import { Check, FunnelSimple, PlusCircle } from "@phosphor-icons/react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -11,39 +11,39 @@ import {
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandSeparator,
 } from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { PriorityIcon } from "./custom-icons";
+import { useComboboxValues } from "@/app/contexts/useComboboxValues";
 
-const frameworks = [
+const priorities = [
   {
-    value: "next.js",
-    label: "Next.js",
+    value: "high",
+    label: "High",
   },
   {
-    value: "sveltekit",
-    label: "SvelteKit",
+    value: "medium",
+    label: "Medium",
   },
   {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
+    value: "low",
+    label: "Low",
   },
 ];
 
 export default function PriorityCombobox() {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const { priorityValue, handleChangePriorityValue } = useComboboxValues();
+
+  function handleClearCombobox() {
+    setOpen(false);
+    handleChangePriorityValue("");
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -54,23 +54,28 @@ export default function PriorityCombobox() {
           aria-expanded={open}
           className="w-fit justify-between items-center px-3 border-dashed"
         >
-          <PlusCircle className="mr-2 size-4 shrink-0" />
-          {value
-            ? frameworks.find((framework) => framework.value === value)?.label
+          {priorities.find((priority) => priority.value === priorityValue) ? (
+            <FunnelSimple className="mr-2 size-4 shrink-0" />
+          ) : (
+            <PlusCircle className="mr-2 size-4 shrink-0" />
+          )}
+          {priorityValue
+            ? priorities.find((priority) => priority.value === priorityValue)
+                ?.label
             : "Priority"}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0" align="start">
         <Command>
-          <CommandInput placeholder="Search framework..." />
-          <CommandEmpty>No framework found.</CommandEmpty>
+          <CommandInput placeholder="Priority" />
+          <CommandEmpty>No priority found.</CommandEmpty>
           <CommandGroup>
-            {frameworks.map((framework) => (
+            {priorities.map((priority) => (
               <CommandItem
-                key={framework.value}
-                value={framework.value}
-                onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue);
+                key={priority.value}
+                value={priority.value}
+                onSelect={() => {
+                  handleChangePriorityValue(priority.value);
                   setOpen(false);
                 }}
                 className="data-[disabled]:pointer-events-auto"
@@ -78,13 +83,26 @@ export default function PriorityCombobox() {
                 <Check
                   className={cn(
                     "mr-2 h-4 w-4",
-                    value === framework.value ? "opacity-100" : "opacity-0"
+                    priorityValue === priority.value
+                      ? "opacity-100"
+                      : "opacity-0"
                   )}
                 />
-                {framework.label}
+                <PriorityIcon priority={priority.value} />
+                {priority.label}
               </CommandItem>
             ))}
           </CommandGroup>
+          {priorityValue && (
+            <>
+              <CommandSeparator />
+              <CommandGroup onClick={handleClearCombobox}>
+                <CommandItem className="justify-center">
+                  Clear filter
+                </CommandItem>
+              </CommandGroup>
+            </>
+          )}
         </Command>
       </PopoverContent>
     </Popover>

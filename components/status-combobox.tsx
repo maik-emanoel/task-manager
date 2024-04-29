@@ -28,38 +28,40 @@ import {
   PlusCircle,
   FunnelSimple,
 } from "@phosphor-icons/react";
+import { StatusIcon } from "./custom-icons";
+import { useComboboxValues } from "@/app/contexts/useComboboxValues";
 
 const status = [
   {
     value: "todo",
     label: "Todo",
-    icon: Circle,
   },
   {
     value: "inProgress",
     label: "In Progress",
-    icon: Timer,
   },
   {
     value: "done",
     label: "Done",
-    icon: XCircle,
   },
   {
     value: "canceled",
     label: "Canceled",
-    icon: CheckCircle,
   },
   {
     value: "backlog",
     label: "Backlog",
-    icon: Question,
   },
 ];
 
 export default function StatusCombobox() {
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const { statusValue, handleChangeStatusValue } = useComboboxValues();
+
+  function handleClearCombobox() {
+    setOpen(false);
+    handleChangeStatusValue("");
+  }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -70,19 +72,19 @@ export default function StatusCombobox() {
           aria-expanded={open}
           className="w-fit justify-between items-center px-3 border-dashed"
         >
-          {status.find((status) => status.value === value) ? (
+          {status.find((status) => status.value === statusValue) ? (
             <FunnelSimple className="mr-2 size-4 shrink-0" />
           ) : (
             <PlusCircle className="mr-2 size-4 shrink-0" />
           )}
-          {value
-            ? status.find((status) => status.value === value)?.label
+          {statusValue
+            ? status.find((status) => status.value === statusValue)?.label
             : "Status"}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0" align="start">
         <Command>
-          <CommandInput placeholder="Search status..." />
+          <CommandInput placeholder="Status" />
           <CommandEmpty>No status found.</CommandEmpty>
           <CommandGroup>
             {status.map((status) => (
@@ -90,25 +92,26 @@ export default function StatusCombobox() {
                 key={status.value}
                 value={status.value}
                 onSelect={() => {
-                  setValue(status.value);
+                  handleChangeStatusValue(status.value);
                   setOpen(false);
                 }}
                 className="data-[disabled]:pointer-events-auto"
               >
                 <Check
                   className={cn(
-                    "mr-2 h-4 w-4",
-                    value === status.value ? "opacity-100" : "opacity-0"
+                    "mr-2 size-4",
+                    statusValue === status.value ? "opacity-100" : "opacity-0"
                   )}
                 />
+                <StatusIcon status={status.value} />
                 {status.label}
               </CommandItem>
             ))}
           </CommandGroup>
-          {value && (
+          {statusValue && (
             <>
               <CommandSeparator />
-              <CommandGroup>
+              <CommandGroup onClick={handleClearCombobox}>
                 <CommandItem className="justify-center">
                   Clear filter
                 </CommandItem>
