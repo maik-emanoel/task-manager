@@ -1,18 +1,6 @@
 "use client";
 
-import {
-  DotsThree,
-  ArrowRight,
-  Icon,
-  Circle,
-  Timer,
-  XCircle,
-  CheckCircle,
-  Question,
-  ArrowUp,
-  ArrowDown,
-  Minus,
-} from "@phosphor-icons/react";
+import { DotsThree } from "@phosphor-icons/react";
 import {
   Table,
   TableHeader,
@@ -37,18 +25,19 @@ import { Button } from "./ui/button";
 import { TaskSchema } from "@/app/types";
 import { updateDatabase } from "@/app/actions";
 import { toast } from "sonner";
-import DeleteTaskButton from "./delete-task-button";
 import { usePagination } from "@/app/contexts/usePagination";
-import { useSearchFilter } from "@/app/contexts/useSearchFilter";
 import { useEffect } from "react";
+import DeleteTaskButton from "./delete-task-button";
+import { PriorityIcon, StatusIcon } from "./custom-icons";
+import useFilterTasks from "@/app/hooks/useFilterTasks";
 
 export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
   const { page, rowsPerPage, setTotalPages } = usePagination();
-  const { debouncedSearch: search } = useSearchFilter();
+  const filteredTasks = useFilterTasks(tasks)
 
   useEffect(() => {
-    setTotalPages(Math.ceil(tasks.length / rowsPerPage));
-  }, [setTotalPages, tasks.length, rowsPerPage]);
+    setTotalPages(Math.ceil(filteredTasks.length / rowsPerPage));
+  }, [setTotalPages, filteredTasks.length, rowsPerPage]);
 
   async function handleChangeTaskInfo({
     value,
@@ -75,13 +64,13 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
       }),
     });
 
-    const response = changeTaskInfo
+    const response = changeTaskInfo;
     updateDatabase();
 
     toast.promise(response, {
       loading: "Loading...",
-      success: `${isStatus ? 'Status' : 'Label'} updated successfully!`,
-      error: 'Failed update task, try again!',
+      success: `${isStatus ? "Status" : "Label"} updated successfully!`,
+      error: "Failed update task, try again!",
     });
   }
 
@@ -103,17 +92,14 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
     );
   }
 
-  const filteredTasks =
-    search.length > 0
-      ? tasks.filter((task) => {
-        const filterTask = task.title.toLowerCase().includes(search.toLowerCase());
+  if (filteredTasks.length === 0) {
+    return (
+      <p className="text-muted-foreground text-sm text-center pt-40">
+        No tasks found.
+      </p>
+    );
+  }
   
-          if (filterTask && task.status === 'todo' && task.priority === 'low') {
-            return true
-          }
-        })
-      : tasks;
-
   return (
     <Table>
       <TableHeader className="pointer-events-none">
@@ -246,50 +232,4 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
       </TableBody>
     </Table>
   );
-}
-
-function StatusIcon({ status }: { status: string }) {
-  let Icon: Icon = Circle;
-
-  switch (status) {
-    case "todo":
-      Icon = Circle;
-      break;
-    case "inProgress":
-      Icon = Timer;
-      break;
-    case "canceled":
-      Icon = XCircle;
-      break;
-    case "done":
-      Icon = CheckCircle;
-      break;
-    case "backlog":
-      Icon = Question;
-      break;
-    default:
-      break;
-  }
-
-  return <Icon className="mr-2 size-4 text-muted-foreground" />;
-}
-
-function PriorityIcon({ priority }: { priority: string }) {
-  let Icon: Icon = Minus;
-
-  switch (priority) {
-    case "high":
-      Icon = ArrowUp;
-      break;
-    case "medium":
-      Icon = ArrowRight;
-      break;
-    case "low":
-      Icon = ArrowDown;
-      break;
-    default:
-      break;
-  }
-
-  return <Icon className="mr-2 size-4 text-muted-foreground" />;
 }
