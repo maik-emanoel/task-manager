@@ -6,7 +6,13 @@ import {
   CaretLeft,
   CaretRight,
 } from "@phosphor-icons/react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 import { Button } from "./ui/button";
 import { usePagination } from "@/app/contexts/usePagination";
 
@@ -21,6 +27,10 @@ export default function Pagination() {
     updateRowsPerPage,
     rowsPerPage,
   } = usePagination();
+
+  if (totalPages === 0) {
+    return null
+  }
 
   return (
     <div className="py-2 px-2 flex w-full justify-between text-muted-foreground">
