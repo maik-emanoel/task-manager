@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { PaginationProvider } from "./contexts/usePagination";
 import { SearchFilterProvider } from "./contexts/useSearchFilter";
+import { ComboboxValuesProvider } from "./contexts/useComboboxValues";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,7 +24,9 @@ export default function RootLayout({
         className={`${inter.className} antialiased bg-background min-h-screen`}
       >
         <PaginationProvider>
-          <SearchFilterProvider>{children}</SearchFilterProvider>
+          <SearchFilterProvider>
+            <ComboboxValuesProvider>{children}</ComboboxValuesProvider>
+          </SearchFilterProvider>
         </PaginationProvider>
         <Toaster richColors />
       </body>
