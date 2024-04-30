@@ -5,8 +5,9 @@ import StatusCombobox from "./status-combobox";
 import PriorityCombobox from "./priority-combobox";
 import { useSearchFilter } from "@/app/contexts/useSearchFilter";
 import { MagnifyingGlass } from "@phosphor-icons/react";
+import { TaskSchema } from "@/app/types";
 
-export default function FilterTools() {
+export default function FilterTools({ tasks }: { tasks: TaskSchema[] }) {
   const { handleSearchFilter } = useSearchFilter();
 
   return (
@@ -18,11 +19,14 @@ export default function FilterTools() {
           onChange={(e) => handleSearchFilter(e.target.value)}
           className="pl-10 peer"
         />
-        <MagnifyingGlass size={16} className="absolute top-1/2 -translate-y-1/2 left-3 text-muted-foreground peer-focus:text-primary" />
+        <MagnifyingGlass
+          size={16}
+          className="absolute top-1/2 -translate-y-1/2 left-3 text-muted-foreground peer-focus:text-primary"
+        />
       </div>
 
-      <StatusCombobox />
-      <PriorityCombobox />
+      <StatusCombobox tasks={tasks} />
+      <PriorityCombobox tasks={tasks} />
     </div>
   );
 }

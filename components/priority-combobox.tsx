@@ -20,25 +20,29 @@ import {
 } from "@/components/ui/popover";
 import { PriorityIcon } from "./custom-icons";
 import { useComboboxValues } from "@/app/contexts/useComboboxValues";
+import { TaskSchema } from "@/app/types";
 
-const priorities = [
-  {
-    value: "high",
-    label: "High",
-  },
-  {
-    value: "medium",
-    label: "Medium",
-  },
-  {
-    value: "low",
-    label: "Low",
-  },
-];
-
-export default function PriorityCombobox() {
+export default function PriorityCombobox({ tasks }: { tasks: TaskSchema[] }) {
   const [open, setOpen] = useState(false);
   const { priorityValue, handleChangePriorityValue } = useComboboxValues();
+
+  const priorities = [
+    {
+      value: "high",
+      label: "High",
+      amount: tasks.filter((task) => task.priority === "high").length,
+    },
+    {
+      value: "medium",
+      label: "Medium",
+      amount: tasks.filter((task) => task.priority === "medium").length,
+    },
+    {
+      value: "low",
+      label: "Low",
+      amount: tasks.filter((task) => task.priority === "low").length,
+    },
+  ];
 
   function handleClearCombobox() {
     setOpen(false);
@@ -89,7 +93,8 @@ export default function PriorityCombobox() {
                   )}
                 />
                 <PriorityIcon priority={priority.value} />
-                {priority.label}
+                <span>{priority.label}</span>
+                <span className="ml-auto text-xs">{priority.amount}</span>
               </CommandItem>
             ))}
           </CommandGroup>
