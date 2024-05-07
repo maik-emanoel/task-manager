@@ -33,7 +33,7 @@ import useFilterTasks from "@/app/hooks/useFilterTasks";
 
 export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
   const { page, rowsPerPage, setTotalPages } = usePagination();
-  const filteredTasks = useFilterTasks(tasks)
+  const filteredTasks = useFilterTasks(tasks);
 
   useEffect(() => {
     setTotalPages(Math.ceil(filteredTasks.length / rowsPerPage));
@@ -99,7 +99,7 @@ export default function TasksTable({ tasks }: { tasks: TaskSchema[] }) {
       </p>
     );
   }
-  
+
   return (
     <Table>
       <TableHeader className="pointer-events-none">

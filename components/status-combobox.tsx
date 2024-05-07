@@ -30,33 +30,39 @@ import {
 } from "@phosphor-icons/react";
 import { StatusIcon } from "./custom-icons";
 import { useComboboxValues } from "@/app/contexts/useComboboxValues";
+import { TaskSchema } from "@/app/types";
 
-const status = [
-  {
-    value: "todo",
-    label: "Todo",
-  },
-  {
-    value: "inProgress",
-    label: "In Progress",
-  },
-  {
-    value: "done",
-    label: "Done",
-  },
-  {
-    value: "canceled",
-    label: "Canceled",
-  },
-  {
-    value: "backlog",
-    label: "Backlog",
-  },
-];
-
-export default function StatusCombobox() {
+export default function StatusCombobox({ tasks }: { tasks: TaskSchema[] }) {
   const [open, setOpen] = useState(false);
   const { statusValue, handleChangeStatusValue } = useComboboxValues();
+
+  const status = [
+    {
+      value: "todo",
+      label: "Todo",
+      amount: tasks.filter((task) => task.status === "todo").length,
+    },
+    {
+      value: "inProgress",
+      label: "In Progress",
+      amount: tasks.filter((task) => task.status === "inProgress").length,
+    },
+    {
+      value: "done",
+      label: "Done",
+      amount: tasks.filter((task) => task.status === "done").length,
+    },
+    {
+      value: "canceled",
+      label: "Canceled",
+      amount: tasks.filter((task) => task.status === "canceled").length,
+    },
+    {
+      value: "backlog",
+      label: "Backlog",
+      amount: tasks.filter((task) => task.status === "backlog").length,
+    },
+  ];
 
   function handleClearCombobox() {
     setOpen(false);
@@ -104,7 +110,8 @@ export default function StatusCombobox() {
                   )}
                 />
                 <StatusIcon status={status.value} />
-                {status.label}
+                <span>{status.label}</span>
+                <span className="ml-auto text-xs">{status.amount}</span>
               </CommandItem>
             ))}
           </CommandGroup>
