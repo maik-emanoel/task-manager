@@ -18,7 +18,7 @@ export default function CreateTaskButton() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default">Create task</Button>
+        <Button variant="default" className="w-full sm:w-fit">Create task</Button>
       </DialogTrigger>
 
       <DialogContent>
