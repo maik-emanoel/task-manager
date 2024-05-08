@@ -17,10 +17,10 @@ export default async function Header() {
   return (
     <header className="flex justify-between items-center">
       <div>
-        <h1 className="text-2xl">
+        <h1 className="text-xl sm:text-2xl">
           Welcome back, <span className="font-bold">{user?.username}!</span>
         </h1>
-        <p className="text-muted-foreground text-sm">
+        <p className="text-muted-foreground text-xs sm:text-sm">
           Here&apos;s a list of your tasks for this month!
         </p>
       </div>

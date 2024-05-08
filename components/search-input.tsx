@@ -8,7 +8,7 @@ export default function SearchInput() {
   const { handleSearchFilter } = useSearchFilter();
 
   return (
-    <div className="relative w-full sm:w-fit">
+    <div className="relative min-w-[200px] w-full sm:w-fit">
       <Input
         placeholder="Filter tasks..."
         name="search-input"

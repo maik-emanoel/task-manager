@@ -56,7 +56,7 @@ export default function PriorityCombobox({ tasks }: { tasks: TaskSchema[] }) {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-fit justify-between items-center px-3 border-dashed"
+          className="w-full sm:w-fit sm:justify-between items-center px-3 border-dashed"
         >
           {priorities.find((priority) => priority.value === priorityValue) ? (
             <FunnelSimple className="mr-2 size-4 shrink-0" />
