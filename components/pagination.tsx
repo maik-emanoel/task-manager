@@ -29,7 +29,7 @@ export default function Pagination() {
   } = usePagination();
 
   if (totalPages === 0) {
-    return null
+    return null;
   }
 
   return (
@@ -40,7 +40,9 @@ export default function Pagination() {
 
       <div className="flex flex-wrap items-end justify-between gap-3 sm:gap-14 flex-row sm:items-center sm:justify-normal">
         <div className="flex items-center gap-2">
-          <span className="whitespace-nowrap text-xs sm:text-sm">Rows per page</span>
+          <span className="whitespace-nowrap text-xs sm:text-sm">
+            Rows per page
+          </span>
 
           <Select
             defaultValue="10"
@@ -52,7 +54,12 @@ export default function Pagination() {
             >
               <SelectValue>{rowsPerPage}</SelectValue>
             </SelectTrigger>
-            <SelectContent align="end">
+            <SelectContent
+              align="end"
+              ref={(ref) =>
+                ref?.addEventListener("touchend", (e) => e.preventDefault())
+              }
+            >
               <SelectItem value="10">10</SelectItem>
               <SelectItem value="20">20</SelectItem>
               <SelectItem value="50">50</SelectItem>
