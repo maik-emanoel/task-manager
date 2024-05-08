@@ -15,10 +15,10 @@ export default async function Header() {
   const user = await getUser();
 
   return (
-    <header className="flex justify-between items-center">
+    <header className="flex justify-between items-center gap-6">
       <div>
         <h1 className="text-xl sm:text-2xl">
-          Welcome back, <span className="font-bold">{user?.username}!</span>
+          Welcome back, <span className="font-bold whitespace-nowrap">{user?.username}!</span>
         </h1>
         <p className="text-muted-foreground text-xs sm:text-sm">
           Here&apos;s a list of your tasks for this month!
