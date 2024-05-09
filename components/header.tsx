@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import LogoutButton from "./logout-button";
+import ThemeSubDropdown from "./theme-subdropdown";
 
 export default async function Header() {
   const user = await getUser();
@@ -18,10 +19,10 @@ export default async function Header() {
     <header className="flex justify-between items-center gap-6">
       <div>
         <h1 className="text-xl sm:text-2xl">
-          Welcome back, <span className="font-bold whitespace-nowrap">{user?.username}!</span>
+          Welcome back, <span className="font-bold">{user?.username}!</span>
         </h1>
         <p className="text-muted-foreground text-xs sm:text-sm">
-          Here&apos;s a list of your tasks for this month!
+          Here&apos;s a list of your tasks!
         </p>
       </div>
 
@@ -42,19 +43,15 @@ export default async function Header() {
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem disabled>
             Profile
             <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            Billing
-            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-          </DropdownMenuItem>
+          <ThemeSubDropdown />
           <DropdownMenuItem>
             Settings
             <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
           </DropdownMenuItem>
-          <DropdownMenuItem>New team</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
             <LogoutButton />
