@@ -52,9 +52,9 @@ export default function TableTrigger({ task }: TableTriggerProps) {
       <DrawerContent className="flex rounded-t-3xl focus-visible:outline-none">
         <div className="relative flex px-5 pb-8 pt-10">
           <TaskInfo task={task} />
-          <DrawerClose asChild className="absolute -top-5 right-2">
+          <DrawerClose asChild className="absolute -top-4 right-2">
             <Button variant="ghost" className="p-2">
-              <X size={20} />
+              <X size={16} />
             </Button>
           </DrawerClose>
         </div>

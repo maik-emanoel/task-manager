@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import { PaginationProvider } from "./contexts/usePagination";
 import { SearchFilterProvider } from "./contexts/useSearchFilter";
 import { ComboboxValuesProvider } from "./contexts/useComboboxValues";
+import { ThemeProvider } from "./providers/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,15 +20,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <body
         className={`${inter.className} antialiased bg-background min-h-screen`}
       >
-        <PaginationProvider>
-          <SearchFilterProvider>
-            <ComboboxValuesProvider>{children}</ComboboxValuesProvider>
-          </SearchFilterProvider>
-        </PaginationProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <PaginationProvider>
+            <SearchFilterProvider>
+              <ComboboxValuesProvider>{children}</ComboboxValuesProvider>
+            </SearchFilterProvider>
+          </PaginationProvider>
+        </ThemeProvider>
         <Toaster richColors />
       </body>
     </html>

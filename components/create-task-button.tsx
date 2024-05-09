@@ -21,8 +21,8 @@ export default function CreateTaskButton() {
         <Button variant="default" className="w-full sm:w-fit">Create task</Button>
       </DialogTrigger>
 
-      <DialogContent>
-        <DialogHeader>
+      <DialogContent className="w-[95%] sm:w-full">
+        <DialogHeader className="text-start">
           <DialogTitle>New task</DialogTitle>
           <DialogDescription>
             Fill up the fields below to create your new task

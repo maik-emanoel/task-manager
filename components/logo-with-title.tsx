@@ -15,7 +15,7 @@ interface LogoWrapperProps extends ComponentProps<'div'> {
 function LogoWithTitle({ widthImage, textSize = "text-sm" }: LogoWithTitleProps) {
   return (
     <>
-      <Image src={logo} alt="Logo" className={widthImage} />
+      <Image src={logo} alt="Logo" className={cn("mix-blend-difference", widthImage)} />
       <p className={cn("text-muted-foreground tracking-wide font-medium", textSize)}>
         Task manager
       </p>
