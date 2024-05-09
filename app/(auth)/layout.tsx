@@ -4,7 +4,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <section className="flex h-screen">
       <div className="flex-1 bg-primary-foreground hidden sm:flex items-center">
-        <LogoWrapper className="space-y-3 mx-auto">
+        <LogoWrapper className="space-y-2 mx-auto">
           <LogoWithTitle widthImage="w-40" textSize="text-4xl" />
         </LogoWrapper>
       </div>
