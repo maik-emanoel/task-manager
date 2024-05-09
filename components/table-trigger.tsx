@@ -10,10 +10,12 @@ import {
 } from "./ui/dialog";
 import TasksTableRow from "./tasks-table-row";
 import { Drawer, DrawerClose, DrawerContent, DrawerTrigger } from "./ui/drawer";
-import { CopySimple, X } from "@phosphor-icons/react";
+import { Check, CopySimple, X } from "@phosphor-icons/react";
 import { Button } from "./ui/button";
 import { useMediaQuery } from "@/app/hooks/useMediaQuery";
 import { Input } from "./ui/input";
+import { handleCopyToClipboard } from "@/app/utils/copy-to-clipboard";
+import { cn } from "@/lib/utils";
 
 interface TableTriggerProps {
   task: TaskSchema;
@@ -62,6 +64,7 @@ export default function TableTrigger({ task }: TableTriggerProps) {
 }
 
 function TaskInfo({ task }: { task: TaskSchema }) {
+  const [isCopied, setIsCopied] = useState(false);
   const formattedDate = new Date(task.createdAt).toLocaleDateString("en-US", {
     weekday: "long", // Full name of the weekday (e.g., "Monday")
     year: "numeric", // Full numeric representation of the year (e.g., "2024")
@@ -82,8 +85,32 @@ function TaskInfo({ task }: { task: TaskSchema }) {
             className="rounded-r-none pointer-events-none focus-visible:ring-0"
             disabled
           />
-          <Button variant="outline" className="rounded-l-none">
-            <CopySimple size={18} />
+          <Button
+            variant="outline"
+            className="rounded-l-none"
+            onClick={() => {
+              handleCopyToClipboard(task.id);
+              setIsCopied(true);
+
+              setTimeout(() => setIsCopied(false), 1000);
+            }}
+          >
+            <div className="relative size-[18px]">
+              <Check
+                size={18}
+                className={cn(
+                  "text-emerald-500 absolute",
+                  isCopied ? "animate-scale-in" : "animate-scale-out"
+                )}
+              />
+              <CopySimple
+                size={18}
+                className={cn(
+                  "absolute",
+                  isCopied ? "animate-scale-out" : "animate-scale-in"
+                )}
+              />
+            </div>
           </Button>
         </div>
       </div>

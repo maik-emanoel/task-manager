@@ -1,6 +1,6 @@
 import { getUser } from "./get-user";
 import { prisma } from "@/lib/prisma";
-import { unstable_cache as cache } from "next/cache";
+import { cache } from "react";
 
 export const getTasks = cache(async () => {
   const user = await getUser();

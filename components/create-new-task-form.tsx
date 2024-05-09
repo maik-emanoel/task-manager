@@ -51,8 +51,8 @@ export default function CreateNewTaskForm({ setOpen }: CreateNewTaskFormProps) {
     const response = await createNewTask.json();
 
     setIsLoading(false);
-    updateDatabase()
-    setOpen(false)
+    updateDatabase();
+    setOpen(false);
 
     if (!response.ok) {
       toast.error("Failed to create new task, please try again!");
@@ -102,7 +102,13 @@ export default function CreateNewTaskForm({ setOpen }: CreateNewTaskFormProps) {
                         ref={field.ref}
                       />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent
+                      ref={(ref) =>
+                        ref?.addEventListener("touchend", (e) =>
+                          e.preventDefault()
+                        )
+                      }
+                    >
                       <SelectItem value="bug">Bug</SelectItem>
                       <SelectItem value="feature">Feature</SelectItem>
                       <SelectItem value="documentation">
