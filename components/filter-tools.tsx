@@ -1,22 +1,19 @@
-"use client";
-
-import { Input } from "./ui/input";
 import StatusCombobox from "./status-combobox";
 import PriorityCombobox from "./priority-combobox";
-import { useSearchFilter } from "@/app/contexts/useSearchFilter";
+import SearchInput from "./search-input";
+import { getTasks } from "@/app/utils/get-tasks";
 
-export default function FilterTools() {
-  const { handleSearchFilter } = useSearchFilter();
+export default async function FilterTools() {
+  const tasks = await getTasks();
 
   return (
-    <div className="flex gap-2">
-      <Input
-        placeholder="Filter tasks..."
-        name="filter-input"
-        onChange={(e) => handleSearchFilter(e.target.value)}
-      />
-      <StatusCombobox />
-      <PriorityCombobox />
+    <div className="flex flex-col gap-2 w-full sm:flex-row">
+      <SearchInput />
+
+      <div className="flex justify-between gap-2">
+        <StatusCombobox tasks={tasks} />
+        <PriorityCombobox tasks={tasks} />
+      </div>
     </div>
   );
 }

@@ -17,7 +17,6 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import ErrorMessage from "./ui/error-message";
 import { toast } from "sonner";
-import { revalidatePath } from "next/cache";
 import { updateDatabase } from "@/app/actions";
 
 interface CreateNewTaskFormProps {
@@ -52,8 +51,8 @@ export default function CreateNewTaskForm({ setOpen }: CreateNewTaskFormProps) {
     const response = await createNewTask.json();
 
     setIsLoading(false);
-    updateDatabase()
-    setOpen(false)
+    updateDatabase();
+    setOpen(false);
 
     if (!response.ok) {
       toast.error("Failed to create new task, please try again!");
@@ -69,7 +68,7 @@ export default function CreateNewTaskForm({ setOpen }: CreateNewTaskFormProps) {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="space-y-4">
         <div className="space-y-1">
-          <label htmlFor="title-input" className="text-sm text-white/90">
+          <label htmlFor="title-input" className="text-sm text-primary/80">
             Title
           </label>
           <Input
@@ -84,7 +83,7 @@ export default function CreateNewTaskForm({ setOpen }: CreateNewTaskFormProps) {
         </div>
         <div className="flex gap-6">
           <div className="flex-1">
-            <label htmlFor="label" className="text-sm text-white/90">
+            <label htmlFor="label" className="text-sm text-primary/80">
               Label
             </label>
             <Controller
@@ -103,7 +102,13 @@ export default function CreateNewTaskForm({ setOpen }: CreateNewTaskFormProps) {
                         ref={field.ref}
                       />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent
+                      ref={(ref) =>
+                        ref?.addEventListener("touchend", (e) =>
+                          e.preventDefault()
+                        )
+                      }
+                    >
                       <SelectItem value="bug">Bug</SelectItem>
                       <SelectItem value="feature">Feature</SelectItem>
                       <SelectItem value="documentation">
@@ -119,7 +124,7 @@ export default function CreateNewTaskForm({ setOpen }: CreateNewTaskFormProps) {
             )}
           </div>
           <div className="flex-1">
-            <label htmlFor="priority" className="text-sm text-white/90">
+            <label htmlFor="priority" className="text-sm text-primary/80">
               Priority
             </label>
             <Controller
@@ -169,7 +174,7 @@ export default function CreateNewTaskForm({ setOpen }: CreateNewTaskFormProps) {
         </div>
       </div>
 
-      <Button type="submit" className="mt-10 w-[140px]" disabled={isLoading}>
+      <Button type="submit" className="mt-10 w-full h-10 sm:w-[140px]" disabled={isLoading}>
         {isLoading ? (
           <CircleNotch size={20} className="animate-spin" />
         ) : (

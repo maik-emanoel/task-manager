@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get("next-auth.session-token")
+  const tokenKey = process.env.NODE_ENV === 'production' ? "__Secure-next-auth.session-token" : "next-auth.session-token";
+  const token = req.cookies.get(tokenKey)
   const pathname = req.nextUrl.pathname
   
   if (!token && isPageRequiringAuth(pathname)) {
