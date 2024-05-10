@@ -44,6 +44,10 @@ This project stemmed from my desire to learn and grow as a developer. As a study
 
 And much more possibilities. Get in to find them.
 
+See the preview video below:
+
+https://github.com/maik-emanoel/task-manager/assets/105499887/6ab66e2e-427c-44ea-868e-33b2f0921873
+
 ## 🔖 Layout
 
 During the development process, I drew inspiration from various sources to create a visually appealing and user-friendly interface. The login/signup interface closely resembles the example provided by [Shadcn/ui](https://ui.shadcn.com/), while the home page layout adapts elements from the Tasks interface of the same source. By leveraging these inspirations, I aimed to create a cohesive and intuitive design for Task Manager while adding my unique touches and customizations.
