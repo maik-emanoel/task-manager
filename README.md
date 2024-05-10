@@ -2,7 +2,7 @@
 
 ![preview](./.github/preview.png)
 
-[🔗 Clique aqui para acessar](https://task-manager-maik.vercel.app/)
+[Click here to access](https://task-manager-maik.vercel.app/)
 
 <p>Case you want to see in pt-br, click in the link below:</p>
 
