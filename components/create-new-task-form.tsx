@@ -68,7 +68,7 @@ export default function CreateNewTaskForm({ setOpen }: CreateNewTaskFormProps) {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="space-y-4">
         <div className="space-y-1">
-          <label htmlFor="title-input" className="text-sm text-white/90">
+          <label htmlFor="title-input" className="text-sm text-primary/80">
             Title
           </label>
           <Input
@@ -83,7 +83,7 @@ export default function CreateNewTaskForm({ setOpen }: CreateNewTaskFormProps) {
         </div>
         <div className="flex gap-6">
           <div className="flex-1">
-            <label htmlFor="label" className="text-sm text-white/90">
+            <label htmlFor="label" className="text-sm text-primary/80">
               Label
             </label>
             <Controller
@@ -124,7 +124,7 @@ export default function CreateNewTaskForm({ setOpen }: CreateNewTaskFormProps) {
             )}
           </div>
           <div className="flex-1">
-            <label htmlFor="priority" className="text-sm text-white/90">
+            <label htmlFor="priority" className="text-sm text-primary/80">
               Priority
             </label>
             <Controller
@@ -174,7 +174,7 @@ export default function CreateNewTaskForm({ setOpen }: CreateNewTaskFormProps) {
         </div>
       </div>
 
-      <Button type="submit" className="mt-10 w-[140px]" disabled={isLoading}>
+      <Button type="submit" className="mt-10 w-full h-10 sm:w-[140px]" disabled={isLoading}>
         {isLoading ? (
           <CircleNotch size={20} className="animate-spin" />
         ) : (

@@ -81,13 +81,13 @@ const TasksTableRow = forwardRef<HTMLTableRowElement, TasksTableRowProps>(
           </div>
         </TableCell>
         <TableCell>
-          <div className="flex items-center w-[110px]">
+          <div className="flex items-center w-fit sm:w-[110px]">
             <StatusIcon status={task.status} />
             <span className="capitalize">{task.status}</span>
           </div>
         </TableCell>
         <TableCell>
-          <div className="flex items-center w-[110px]">
+          <div className="flex items-center w-fit sm:w-[110px]">
             <PriorityIcon priority={task.priority} />
             <span className="first-letter:uppercase">{task.priority}</span>
           </div>
