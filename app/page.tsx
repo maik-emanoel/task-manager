@@ -1,8 +1,11 @@
-import CreateTaskButton from "@/components/create-task-button";
-import FilterTools from "@/components/filter-tools";
-import Header from "@/components/header";
-import Pagination from "@/components/pagination";
-import Tasks from "@/components/tasks";
+import { Suspense } from 'react'
+
+import CreateTaskButton from '@/components/create-task-button'
+import FilterTools from '@/components/filter-tools'
+import Header from '@/components/header'
+import Pagination from '@/components/pagination'
+import Tasks from '@/components/tasks'
+import TasksFallback from '@/components/tasks-fallback'
 
 export default async function Home() {
   return (
@@ -14,9 +17,11 @@ export default async function Home() {
           <CreateTaskButton />
         </div>
 
-        <Tasks />
+        <Suspense fallback={<TasksFallback />}>
+          <Tasks />
+        </Suspense>
         <Pagination />
       </div>
     </div>
-  );
+  )
 }
