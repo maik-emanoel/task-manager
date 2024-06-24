@@ -23,7 +23,7 @@ export default function PasswordInput<T extends FieldValues>({ register }: Passw
         {...register("password" as FieldPath<T>, { required: true, minLength: 6 })}
       />
       <div
-        className="absolute top-1.5 right-3"
+        className="absolute -top-0.5 right-1 size-8 flex items-center justify-center cursor-pointer"
         onClick={handleTogglePasswordVisibility}
       >
         {!isPasswordVisible ? (
